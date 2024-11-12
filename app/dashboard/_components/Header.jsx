@@ -18,7 +18,6 @@ function Header() {
           <Image src={'/star.png'} alt= 'star'width={20} height={20}/>
         <h2>{userDetail?.credits}</h2>
         </div>
-        <Button>Dashboard</Button>
         <UserButton/>
       </div>
     </div>
