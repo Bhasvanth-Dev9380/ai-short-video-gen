@@ -1,6 +1,6 @@
 import textToSpeech from "@google-cloud/text-to-speech";
 import { NextResponse } from "next/server";
-import { storage } from "E:/ai short video gen/ai-short-video-generator/app/configs/FireabaseConfig.js";
+import { storage } from "../../configs/FireabaseConfig";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 // Initialize the Text-to-Speech client

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
 import axios from "axios"; // Import axios for making HTTP requests
-import { storage } from "E:/ai short video gen/ai-short-video-generator/app/configs/FireabaseConfig.js";
+import { storage } from "../../configs/FireabaseConfig";
 import { ref, getDownloadURL, uploadString } from "firebase/storage";
 
 export async function POST(req) {

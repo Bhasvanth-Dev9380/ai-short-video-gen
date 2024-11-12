@@ -9,7 +9,7 @@ import {
     SelectValue,
 } from "../../../../@/components/ui/select"
 
-import {Textarea} from 'E:/ai short video gen/ai-short-video-generator/@/components/ui/textarea.jsx'
+import {Textarea} from '../../../../@/components/ui/textarea'
 
 function SelectTopic({onUserSelect}) {
     const options = ['Custom Prompt', 'Random AI Story', 'Scary Story','Historical Facts','Bed Time Story','Motivational','Fun Facts'];
