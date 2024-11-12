@@ -7,7 +7,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "E:/ai short video gen/ai-short-video-generator/@/components/ui/select.jsx"
+} from "../../../../@/components/ui/select"
 
 import {Textarea} from 'E:/ai short video gen/ai-short-video-generator/@/components/ui/textarea.jsx'
 

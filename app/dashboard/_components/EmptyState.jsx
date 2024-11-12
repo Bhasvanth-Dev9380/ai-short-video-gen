@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'E:/ai short video gen/ai-short-video-generator/@/components/ui/button.jsx'
+import { Button } from '../../../@/components/ui/button.jsx'
 import Link from 'next/link'
 
 function EmptyState() {

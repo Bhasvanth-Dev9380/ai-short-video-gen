@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import SelectTopic from './_components/SelectTopic'
 import SelectStyle from './_components/SelectStyle'
 import SelectDuration from './_components/SelectDuration'
-import { Button } from "E:/ai short video gen/ai-short-video-generator/@/components/ui/button.jsx";
+import { Button } from "../../../@/components/ui/button.jsx";
 import axios  from 'axios'
 import CustomLoading from './_components/CustomLoading'
 import {v4 as uuidv4} from 'uuid'

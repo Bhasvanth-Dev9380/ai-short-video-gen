@@ -6,7 +6,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "E:/ai short video gen/ai-short-video-generator/@/components/ui/select.jsx"
+} from "../../../../@/components/ui/select"
 
 function SelectDuration({onUserSelect}) {
   return (

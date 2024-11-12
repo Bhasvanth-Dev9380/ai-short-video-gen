@@ -1,6 +1,6 @@
 import { UserButton } from '@clerk/nextjs'
 import React ,{useContext}from 'react'
-import {Button} from 'E:/ai short video gen/ai-short-video-generator/@/components/ui/button.jsx'
+import {Button} from '../../../@/components/ui/button.jsx'
 import Image from 'next/image'
 import { UserDetailContext } from '../../_context/UserDetailContext';
 
@@ -15,7 +15,7 @@ function Header() {
         </div>
       <div className='flex gap-3 items-center'>
         <div className='flex gap-2 items-center'>
-          <Image src={'/star.png'} width={20} height={20}/>
+          <Image src={'/star.png'} alt= 'star'width={20} height={20}/>
         <h2>{userDetail?.credits}</h2>
         </div>
         <Button>Dashboard</Button>

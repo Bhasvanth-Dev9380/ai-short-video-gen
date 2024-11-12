@@ -38,7 +38,7 @@ function SelectStyle({onUserSelect}) {
                     <div className={`relative hover:scale-105 transition-all cursor pointer rounded-xl
                     ${selectedOption==item.name && 'border-4 border-primary '}
                     `}>
-                        <Image src={item.image} width={100} height={200} 
+                        <Image src={item.image} alt='style' width={100} height={200} 
                         className='h-48 object-cover rounded-lg w-full'
                         
                         

@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from 'E:/ai short video gen/ai-short-video-generator/@/components/ui/button.jsx';
+import { Button } from '../../@/components/ui/button.jsx';
 import EmptyState from './_components/EmptyState';
 import Link from 'next/link';
 import { db } from '../configs/db';
