@@ -18,68 +18,7 @@ import { UserDetailContext } from '../../_context/UserDetailContext'
 import { Users } from '../../configs/schema';
 import { eq } from 'drizzle-orm';
 
-function Toast({ message, onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000); // Auto-close after 3 seconds
-    return () => clearTimeout(timer);
-  }, [onClose]);
 
-  return (
-    <div className="toast">
-      <span>{message}</span>
-      <button className="close-btn" onClick={onClose}>&times;</button>
-      <style jsx>{`
-        .toast {
-          display: flex;
-          align-items: center;
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          background-color: #1f2937; /* Dark background */
-          color: #fff;
-          padding: 12px 20px;
-          border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          font-size: 1rem;
-          z-index: 1000;
-          opacity: 0;
-          animation: slideIn 0.5s forwards, fadeOut 0.5s ease 2.5s forwards;
-        }
-
-        .close-btn {
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 1.2rem;
-          margin-left: 12px;
-          cursor: pointer;
-          transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-          color: #f87171; /* Hover color for close button */
-        }
-
-        @keyframes slideIn {
-          from {
-            transform: translateY(20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes fadeOut {
-          to {
-            opacity: 0;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
 
 
 
