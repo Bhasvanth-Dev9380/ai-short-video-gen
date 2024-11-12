@@ -1,6 +1,6 @@
 import textToSpeech from "@google-cloud/text-to-speech";
 import { NextResponse } from "next/server";
-import { storage } from "../../configs/FirebaseConfig";
+import { storage } from "../../configs/FireabaseConfig";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 const client = new textToSpeech.TextToSpeechClient(); // Make sure to use service account auth
