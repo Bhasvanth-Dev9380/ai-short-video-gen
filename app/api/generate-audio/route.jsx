@@ -14,7 +14,7 @@ export async function POST(req) {
 
     const request = {
         input: { text: text },
-        voice: { languageCode: 'te-IN', ssmlGender: 'MALE' },
+        voice: { languageCode: 'en-US', ssmlGender: 'MALE' },
         audioConfig: { audioEncoding: 'MP3' },
     };
 
