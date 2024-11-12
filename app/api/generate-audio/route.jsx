@@ -1,35 +1,56 @@
 import textToSpeech from "@google-cloud/text-to-speech";
 import { NextResponse } from "next/server";
-import { storage } from "../../configs/FireabaseConfig";
+import { storage, firestore } from "../../configs/FirebaseConfig";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
-// Initialize the Text-to-Speech client
-const client = new textToSpeech.TextToSpeechClient({
-    apiKey:process.env.GOOGLE_API_KEY
-});
+const client = new textToSpeech.TextToSpeechClient();
 
 export async function POST(req) {
     const { text, id } = await req.json();
     const storageRef = ref(storage, 'ai-short-video-files/' + id + '.mp3');
+    const jobRef = doc(firestore, "audio_jobs", id);
 
+    // Immediately set a pending job in Firestore
+    await setDoc(jobRef, {
+        status: "pending",
+        downloadUrl: null
+    });
+
+    // Start async processing for text-to-speech
+    generateAudioJob(text, id, storageRef, jobRef);
+
+    // Return the job ID for the client to poll
+    return NextResponse.json({ jobId: id, status: "pending" });
+}
+
+// Asynchronous function to generate audio and update job status
+async function generateAudioJob(text, id, storageRef, jobRef) {
     const request = {
-        input: { text: text },
+        input: { text },
         voice: { languageCode: 'en-US', ssmlGender: 'MALE' },
         audioConfig: { audioEncoding: 'MP3' },
     };
 
-    // Perform the text-to-speech request
-    const [response] = await client.synthesizeSpeech(request);
+    try {
+        // Generate the speech audio
+        const [response] = await client.synthesizeSpeech(request);
+        const audioBuffer = Buffer.from(response.audioContent, 'binary');
 
-    // Convert the response to a Buffer
-    const audioBuffer = Buffer.from(response.audioContent, 'binary');
+        // Upload audio to Firebase Storage
+        await uploadBytes(storageRef, audioBuffer, { contentType: 'audio/mp3' });
 
-    // Upload the audio to Firebase Storage
-    await uploadBytes(storageRef, audioBuffer, { contentType: 'audio/mp3' });
+        // Get download URL
+        const downloadUrl = await getDownloadURL(storageRef);
 
-    // Get the download URL
-    const downloadUrl = await getDownloadURL(storageRef);
-    console.log(downloadUrl);
-
-    return NextResponse.json({ Result: 'Success', downloadUrl });
+        // Update job status in Firestore
+        await setDoc(jobRef, {
+            status: "completed",
+            downloadUrl: downloadUrl
+        }, { merge: true });
+    } catch (error) {
+        console.error("Error generating audio:", error);
+        // Set the job status to failed in Firestore in case of an error
+        await setDoc(jobRef, { status: "failed" }, { merge: true });
+    }
 }
