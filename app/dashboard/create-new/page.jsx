@@ -86,45 +86,44 @@ function CreateNew() {
   
   }
 
-// Assume videoScriptData is an array of scene objects
-const GenerateAudioFile = async () => {
-  try {
-    setLoading(true);
+  const GenerateAudioFile = async (videoScriptData) => {
+    try {
+        setLoading(true);
+        let script = '';
+        const id = uuidv4();
 
-    // Dummy ID
-    const id = uuidv4();
+        // Concatenate all ContentText fields from videoScriptData
+        videoScriptData.forEach(item => {
+            script += item.ContentText + ' ';
+        });
 
-    // 🔹 TEST: Use short text to avoid timeout
-    const response = await axios.post('/api/generate-audio', {
-      text: 'Hello world. This is a short test.',
-      id: id
-    });
+        console.log("Generated Script:", script);
 
-    if (response.data && response.data.downloadUrl) {
-      console.log("Audio File URL:", response.data.downloadUrl);
+        // Make the API request to generate audio
+        const response = await axios.post('/api/generate-audio', {
+            text: script,
+            id: id
+        });
 
-      // Set dummy response URL (simulate audio URL)
-      const dummyAudioUrl = 'https://example.com/audio/hello-world.mp3';
+        setVideoData(prev=>({
+          ...prev,
+          'audioFileUrl':response.data.downloadUrl
+  
+        }));
+        // Check if the response contains the expected download URL
+        if (response.data && response.data.downloadUrl) {
+            console.log("Audio File URL:", response.data.downloadUrl);
+            setAudioFileUrl(response.data.downloadUrl);
 
-      setAudioFileUrl(dummyAudioUrl);
-      setVideoData(prev => ({
-        ...prev,
-        'audioFileUrl': dummyAudioUrl
-      }));
-
-      // Skip real caption generation for now (optional)
-      // GenerateAudioCaption(dummyAudioUrl, []); 
-    } else {
-      console.error("No download URL found in response:", response);
-    }
-
-  } catch (error) {
-    console.error("Error generating audio file:", error);
-  } finally {
-    setLoading(false);
-  }
+            // Pass the download URL to GenerateAudioCaption
+            GenerateAudioCaption(response.data.downloadUrl,videoScriptData);
+        } else {
+            console.error("No download URL found in response:", response);
+        }
+    } catch (error) {
+        console.error("Error generating audio file:", error);
+    } 
 };
-
 
 
 
