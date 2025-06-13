@@ -105,25 +105,41 @@ function CreateNew() {
             id: id
         });
 
-        setVideoData(prev=>({
-          ...prev,
-          'audioFileUrl':response.data.downloadUrl
-  
-        }));
-        // Check if the response contains the expected download URL
         if (response.data && response.data.downloadUrl) {
             console.log("Audio File URL:", response.data.downloadUrl);
+
             setAudioFileUrl(response.data.downloadUrl);
 
-            // Pass the download URL to GenerateAudioCaption
-            GenerateAudioCaption(response.data.downloadUrl,videoScriptData);
+            setVideoData(prev => ({
+                ...prev,
+                audioFileUrl: response.data.downloadUrl
+            }));
+
+            // Generate captions from the audio
+            GenerateAudioCaption(response.data.downloadUrl, videoScriptData);
         } else {
             console.error("No download URL found in response:", response);
         }
     } catch (error) {
-        console.error("Error generating audio file:", error);
-    } 
+        console.error("Error generating audio file:", error.message);
+
+        if (error.response) {
+            // Server responded with a status code outside 2xx
+            console.error("Response status:", error.response.status);
+            console.error("Response data:", error.response.data);
+            console.error("Response headers:", error.response.headers);
+        } else if (error.request) {
+            // Request was made but no response received
+            console.error("Request made but no response:", error.request);
+        } else {
+            // Something happened while setting up the request
+            console.error("Error setting up request:", error.message);
+        }
+    } finally {
+        setLoading(false);
+    }
 };
+
 
 
 
