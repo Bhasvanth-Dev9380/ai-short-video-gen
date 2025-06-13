@@ -86,43 +86,39 @@ function CreateNew() {
   
   }
 
-  const GenerateAudioFile = async (videoScriptData) => {
-    try {
-        setLoading(true);
-        let script = '';
-        const id = uuidv4();
+// Assume videoScriptData is an array of scene objects
+const GenerateAudioFile = async (videoScriptData) => {
+  try {
+    setLoading(true);
+    const id = uuidv4();
 
-        // Concatenate all ContentText fields from videoScriptData
-        videoScriptData.forEach(item => {
-            script += item.ContentText + ' ';
-        });
+    const audioUrls = [];
 
-        console.log("Generated Script:", script);
+    for (let i = 0; i < videoScriptData.length; i++) {
+      const scene = videoScriptData[i];
+      const response = await axios.post('/api/generate-audio', {
+        text: scene.ContentText,
+        id: `${id}-${i}`
+      });
 
-        // Make the API request to generate audio
-        const response = await axios.post('/api/generate-audio', {
-            text: script,
-            id: id
-        });
+      if (response.data && response.data.downloadUrl) {
+        audioUrls.push(response.data.downloadUrl);
+      } else {
+        console.error("Missing download URL for scene", i);
+      }
+    }
 
-        setVideoData(prev=>({
-          ...prev,
-          'audioFileUrl':response.data.downloadUrl
-  
-        }));
-        // Check if the response contains the expected download URL
-        if (response.data && response.data.downloadUrl) {
-            console.log("Audio File URL:", response.data.downloadUrl);
-            setAudioFileUrl(response.data.downloadUrl);
+    setVideoData(prev => ({
+      ...prev,
+      'audioFileUrl': audioUrls
+    }));
+    setAudioFileUrl(audioUrls);
 
-            // Pass the download URL to GenerateAudioCaption
-            GenerateAudioCaption(response.data.downloadUrl,videoScriptData);
-        } else {
-            console.error("No download URL found in response:", response);
-        }
-    } catch (error) {
-        console.error("Error generating audio file:", error);
-    } 
+    // Now pass all URLs for caption generation
+    GenerateAudioCaption(audioUrls, videoScriptData);
+  } catch (error) {
+    console.error("Error generating audio file:", error);
+  }
 };
 
 
