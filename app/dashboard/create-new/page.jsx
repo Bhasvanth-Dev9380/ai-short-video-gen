@@ -92,34 +92,32 @@ const GenerateAudioFile = async (videoScriptData) => {
     setLoading(true);
     const id = uuidv4();
 
-    const audioUrls = [];
+    // Test with a short, simple script
+    const response = await axios.post('/api/generate-audio', {
+      text: 'Hello world. This is a short test.',
+      id: id
+    });
 
-    for (let i = 0; i < videoScriptData.length; i++) {
-      const scene = videoScriptData[i];
-      const response = await axios.post('/api/generate-audio', {
-        text: scene.ContentText,
-        id: `${id}-${i}`
-      });
+    if (response.data && response.data.downloadUrl) {
+      console.log("Test Audio URL:", response.data.downloadUrl);
 
-      if (response.data && response.data.downloadUrl) {
-        audioUrls.push(response.data.downloadUrl);
-      } else {
-        console.error("Missing download URL for scene", i);
-      }
+      setVideoData(prev => ({
+        ...prev,
+        'audioFileUrl': [response.data.downloadUrl] // Using array format to match original code
+      }));
+
+      setAudioFileUrl([response.data.downloadUrl]);
+
+      // Pass dummy videoScriptData for caption generation test
+      GenerateAudioCaption(response.data.downloadUrl, videoScriptData);
+    } else {
+      console.error("No download URL found in response:", response);
     }
-
-    setVideoData(prev => ({
-      ...prev,
-      'audioFileUrl': audioUrls
-    }));
-    setAudioFileUrl(audioUrls);
-
-    // Now pass all URLs for caption generation
-    GenerateAudioCaption(audioUrls, videoScriptData);
   } catch (error) {
-    console.error("Error generating audio file:", error);
+    console.error("Error generating test audio file:", error);
   }
 };
+
 
 
 
