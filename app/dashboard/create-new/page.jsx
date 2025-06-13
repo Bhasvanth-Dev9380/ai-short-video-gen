@@ -87,34 +87,41 @@ function CreateNew() {
   }
 
 // Assume videoScriptData is an array of scene objects
-const GenerateAudioFile = async (videoScriptData) => {
+const GenerateAudioFile = async () => {
   try {
     setLoading(true);
+
+    // Dummy ID
     const id = uuidv4();
 
-    // Test with a short, simple script
+    // 🔹 TEST: Use short text to avoid timeout
     const response = await axios.post('/api/generate-audio', {
       text: 'Hello world. This is a short test.',
       id: id
     });
 
     if (response.data && response.data.downloadUrl) {
-      console.log("Test Audio URL:", response.data.downloadUrl);
+      console.log("Audio File URL:", response.data.downloadUrl);
 
+      // Set dummy response URL (simulate audio URL)
+      const dummyAudioUrl = 'https://example.com/audio/hello-world.mp3';
+
+      setAudioFileUrl(dummyAudioUrl);
       setVideoData(prev => ({
         ...prev,
-        'audioFileUrl': [response.data.downloadUrl] // Using array format to match original code
+        'audioFileUrl': dummyAudioUrl
       }));
 
-      setAudioFileUrl([response.data.downloadUrl]);
-
-      // Pass dummy videoScriptData for caption generation test
-      GenerateAudioCaption(response.data.downloadUrl, videoScriptData);
+      // Skip real caption generation for now (optional)
+      // GenerateAudioCaption(dummyAudioUrl, []); 
     } else {
       console.error("No download URL found in response:", response);
     }
+
   } catch (error) {
-    console.error("Error generating test audio file:", error);
+    console.error("Error generating audio file:", error);
+  } finally {
+    setLoading(false);
   }
 };
 
